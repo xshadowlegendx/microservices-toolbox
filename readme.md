@@ -1,5 +1,9 @@
 # Microservices Toolbox
 
+<p>
+  <img src="https://github.com/xshadowlegendx/microservices-toolbox/actions/workflows/ci.yml/badge.svg"/>
+</p>
+
 A lightweight container image bundling tools for quick and common automation
 
 ## Tools Included
@@ -20,5 +24,5 @@ A lightweight container image bundling tools for quick and common automation
 
 ## Getting started
 ```bash
-docker run --rm -it shadowlegend/microservices-toolbox:0.0.1 jo hello=world
+docker run --rm -it shadowlegend/microservices-toolbox:latest jo hello=world
 ```
