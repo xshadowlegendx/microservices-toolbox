@@ -1,0 +1,64 @@
+
+on:
+  release:
+    types:
+      - published
+
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - readme.md
+      - .gitignore
+
+  pull_request:
+    types:
+      - synchronize
+      - ready_for_review
+
+jobs:
+  build-push-docker-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USER }}
+          password: ${{ secrets.dockerhub_token }}
+        if: github.ref_name == 'main' || github.event.action == 'published'
+
+      - name: build and push docker image
+        uses: docker/build-push-action@v5
+        with:
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.ref_name == 'main' || github.event.action == 'published' }}
+          context: .
+          tags: ${{ vars.IMAGE_REF }}:${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
+
+  update-release:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'published'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: construct release body
+        run: cog changelog ${{ github.ref_name }} > release.md
+
+      - uses: markpatterson27/markdown-to-output@v1
+        id: release_body
+        with:
+          filepath: release.md
+
+      - name: update release
+        uses: tubone24/update_release@v1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          body: ${{ steps.release_body.outputs.body }}
