@@ -2,6 +2,7 @@
 
 <p>
   <img src="https://github.com/xshadowlegendx/microservices-toolbox/actions/workflows/ci.yml/badge.svg"/>
+  <img src="https://img.shields.io/docker/pulls/shadowlegend/microservices-toolbox"/>
 </p>
 
 A lightweight container image bundling tools for quick and common automation
