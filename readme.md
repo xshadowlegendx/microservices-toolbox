@@ -15,6 +15,7 @@ A lightweight container image bundling tools for quick and common automation
 - `nats` v0.3.0
 - `miller` v6.15.0
 - `jsonnet`
+- `gomplate`
 - `jo`
 - `m4`
 - `openssl`
