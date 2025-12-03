@@ -8,6 +8,7 @@ on:
     branches:
       - main
     paths-ignore:
+      - license
       - readme.md
       - .gitignore
 
