@@ -16,6 +16,11 @@ on:
       - synchronize
       - ready_for_review
 
+permissions:
+  actions: read
+  contents: write
+  packages: write
+
 jobs:
   build-push-docker-image:
     runs-on: ubuntu-latest
