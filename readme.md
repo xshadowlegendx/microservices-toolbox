@@ -122,6 +122,9 @@ spec:
             do
               read data <<< \$(jq -r 'select(.action == "insert") | tostring' <<< \$payload)
               echo "\$data"
+              if [ -z "\${data}" ]; then
+                continue
+              fi
               cat <<-EOF> msg
           <b>new order placed</b>
           order id: \$(jq -r .data.id <<< \$data)
