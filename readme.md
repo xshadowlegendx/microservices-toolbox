@@ -33,7 +33,7 @@ docker run --rm -it shadowlegend/microservices-toolbox:latest jo hello=world
 ### Send alert to telegram on some cdc event
 ```bash
 # below demo assuming u already have
-# docker and nats-cli installed
+# jo, docker, nats-cli installed
 # and on some kind of *nix system
 docker container run --rm -d -p 24112:4222 nats:2.12-alpine -js
 while ! nc -z localhost 24112; do   
@@ -120,14 +120,15 @@ spec:
             myapp-cdc.orders.*.placed |
             while read -r payload
             do
+              echo "\$payload"
               read data <<< \$(jq -r 'select(.action == "insert") | tostring' <<< \$payload)
-              echo "\$data"
               if [ -z "\${data}" ]; then
                 continue
               fi
               cat <<-EOF> msg
-          <b>new order placed</b>
+          <b>🚨 new order placed</b>
           order id: \$(jq -r .data.id <<< \$data)
+          total price (usd): <span class="tg-spoiler">\$(jq -r .data.total_price_in_usd <<< \$data)</span>
           customer loyalty level: \$(jq -r .data.customer_loyalty_level <<< \$data)
           created time: \$(jq -r .data.created_at <<< \$data)
           EOF
@@ -142,5 +143,5 @@ kubectl logs -l app=telegram-alert-demo | grep 'access token:'
 kubectl port-forward svc/telegram-alert-demo 55557:80
 # send below message for testing and watch for changes
 # in rbaskset webui
-nats --server localhost:24112 pub myapp-cdc.orders.20690609113.placed '{"action":"insert","data":{"id":"20690609113","customer_loyalty_level":"platinum","created_at":"2026-06-09T06:09:25Z"}}'
+nats --server localhost:24112 pub myapp-cdc.orders.20690609113.placed $(jo action=insert data=$(jo id="20690609$RANDOM" total_price_in_usd=$(shuf -i2-1000 -n1).$(shuf -i0-99 -n1) customer_loyalty_level=$(awk 'BEGIN { srand(); split("bronze silver gold platinum diamond", r); print r[int(rand() * 5) + 1] }') created_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')))
 ```
