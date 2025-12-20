@@ -1,6 +1,6 @@
 FROM alpine:3.22
 
-RUN apk add --no-cache --virtual .tools m4 jo bash curl unzip jsonnet openssl uuidgen aws-cli postgresql16-client &&\
+RUN apk add --no-cache --virtual .tools m4 jo bash curl unzip jsonnet openssl uuidgen aws-cli iso-codes postgresql16-client &&\
   ARCH=$(arch | sed 's/aarch64/arm64/; s/x86_64/amd64/;') &&\
   curl -sLo /usr/local/bin/kubectl https://dl.k8s.io/release/v1.34.0/bin/linux/$ARCH/kubectl &&\
   curl -sLo /usr/local/bin/jq https://github.com/jqlang/jq/releases/download/jq-1.8.1/jq-linux-$ARCH &&\
