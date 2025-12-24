@@ -14,5 +14,5 @@ RUN apk add --no-cache --virtual .tools m4 jo bash curl unzip jsonnet openssl uu
   tar -xjf usql.tar.bz2 &&\
   mv usql_static /usr/local/bin/usql &&\
   curl -sLo /usr/local/bin/gomplate https://github.com/hairyhenderson/gomplate/releases/download/v4.3.3/gomplate_linux-$ARCH &&\
-  chmod +x /usr/local/bin/jq /usr/local/bin/yq /usr/local/bin/gomplate &&\
+  chmod +x /usr/local/bin/jq /usr/local/bin/yq /usr/local/bin/kubectl /usr/local/bin/gomplate &&\
   rm -rf nats.zip nats-0.3.0-linux-$ARCH miller.tar.gz miller-6.15.0-linux-$ARCH usql.tar.bz2
