@@ -14,5 +14,23 @@ RUN apk add --no-cache --virtual .tools m4 jo bash curl unzip jsonnet openssl uu
   tar -xjf usql.tar.bz2 &&\
   mv usql_static /usr/local/bin/usql &&\
   curl -sLo /usr/local/bin/gomplate https://github.com/hairyhenderson/gomplate/releases/download/v4.3.3/gomplate_linux-$ARCH &&\
+  curl -sLo age.tar.gz https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-$ARCH.tar.gz &&\
+  tar -xzf age.tar.gz && mv age/age age/age-inspect age/age-keygen age/age-plugin-batchpass /usr/local/bin/ &&\
   chmod +x /usr/local/bin/jq /usr/local/bin/yq /usr/local/bin/kubectl /usr/local/bin/gomplate &&\
   rm -rf nats.zip nats-0.3.0-linux-$ARCH miller.tar.gz miller-6.15.0-linux-$ARCH usql.tar.bz2
+
+RUN apk add --no-cache --virtual .deps libassuan libksba nettle libgcrypt gmp
+
+RUN apk add --no-cache --virtual .builds build-base gmp-dev libgcrypt-dev libassuan-dev libksba-dev nettle-dev &&\
+  curl -sLo gpg.tar.bz2 https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-2.5.16.tar.bz2 &&\
+  tar -xjf gpg.tar.bz2 &&\
+  cd gnupg-2.5.16 &&\
+  curl -sLo npth.tar.bz2 https://gnupg.org/ftp/gcrypt/npth/npth-1.8.tar.bz2 &&\
+  curl -sLo libgpg-error.tar.bz2 https://gnupg.org/ftp/gcrypt/gpgrt/libgpg-error-1.58.tar.bz2 &&\
+  tar -xjf npth.tar.bz2 &&\
+  cd npth-1.8/ && ./configure && make && make install && cd ../ &&\
+  tar -xjf libgpg-error.tar.bz2 &&\
+  cd libgpg-error-1.58/ && ./configure && make && make install && cd ../ &&\
+  ./configure && make && make install &&\
+  cd .. && rm -rf gnupg-2.5.16 gpg.tar.bz2 &&\
+  apk del .builds
