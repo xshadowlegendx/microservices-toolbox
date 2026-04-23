@@ -16,6 +16,7 @@ A lightweight container image bundling tools for quick and common automation
 - `miller` v6.15.0
 - `imagemagick` with extra features such as avif and jxl supports
 - `usql` universal sql utility supporting various db such as postgresql, clickhouse, etc
+- `apprise` send push notification to popular services
 - `age`
 - `gnupg`
 - `jsonnet`
